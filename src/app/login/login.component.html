@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="left">
+        <img src="assets/Facebook_logo_(2023).svg" alt="facebook">
+        <p>Facebook helps you connect and share with the people in your life.</p>
+    </div>
+    <div class="right">
+        <form #LoginForm="ngForm" (ngSubmit)="Login(LoginForm)">
+            <input type="text" placeholder="Email address or phone number" required>
+            <input type="password" name="" id="" placeholder="Password">
+            <button class="btn">Login</button>
+
+            <span><a routerLink="/forget">Forgetten password ?</a></span>
+            <hr>
+            <button class="create">Create New Account</button>
+        </form>
+    </div>
+</div>
