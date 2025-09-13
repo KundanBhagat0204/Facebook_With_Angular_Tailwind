@@ -1,15 +1,32 @@
-<div class="container mt-48 flex">
-    <div class="left">
-        <img class="w-60" src="assets/Facebook_logo_(2023).svg" alt="facebook">
-        <p>Facebook helps you connect and share with the people in your life.</p>
+<div class="container mt-48 flex mx-auto">
+    <div class="left m-4">
+        <img class="w-72" src="assets/Facebook_logo_(2023).svg" alt="facebook">
+        <p class="text-2xl w-[72px]">Facebook helps you connect and share with the people in your life.</p>
     </div>
-    <div class="right flex flex-col">
-        <form #LoginForm="ngForm" (ngSubmit)="Login(LoginForm)">
-            <input type="text" placeholder="Email address or phone number" required><br>
-            <input type="password" name="" id="" placeholder="Password"><br>
-            <button class="btn">Login</button><br>
+    <div
+        class="right flex flex-col bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 drak:border-gray-700">
+        <form #LoginForm="ngForm" (ngSubmit)="Login(LoginForm)" class="space-y-4 md:space-y-6">
+            <div>
+                <label for="userEmail" class="block mb-2 text-sm font-medium text-gray-900 dark:white">User
+                    Email</label>
+                <input type="email" placeholder="Email address or phone number" name="userEmail" id="userEmail"
+                    #userEmail="ngModel" ngModel
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                    required><br>
+            </div>
+            <div>
+                <label for="userPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:white">
+                    Password</label>
+                <input type="password" placeholder="Password" name="userPassword" id="userPassword"
+                    #userPassword="ngModel" ngModel
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                    required><br>
 
-            <span><a routerLink="/forget">Forgetten password ?</a></span><br>
+            </div> <button class="btn">Login</button><br>
+            <div>
+                <span><a routerLink="/forget">Forgetten password ?</a></span><br>
+
+            </div>
             <hr><br>
             <button class="create">Create New Account</button>
         </form>
