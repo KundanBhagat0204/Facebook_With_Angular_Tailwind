@@ -1,1 +1,117 @@
-<p>signup works!</p>
+<div
+  class="container min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100 dark:bg-gray-800"
+>
+  <div class="left flex-1 flex flex-col items-center justify-center p-6">
+    <img
+      class="w-48 mb-4"
+      src="assets/Facebook_logo_(2023).svg"
+      alt="facebook"
+    />
+  </div>
+  <div class="right flex-1 flex items-center justify-center">
+    <form
+      #SignUpForm="ngForm"
+      (ngSubmit)="Signup(SignUpForm)"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full space-y-6"
+    >
+      <div class="flex flex-1 flex-col items-center">
+        <h3 class="font-bold text-3xl">Create a new account</h3>
+        <p class="text-gray-500">it's quick and easy.</p>
+      </div>
+      <hr />
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 md:col-span-6">
+          <label
+            for="DOB"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >First Name</label
+          >
+          <input
+            type=""
+            placeholder="First name"
+            name="userEmail"
+            id="userEmail"
+            #firstName="ngModel"
+            ngModel
+            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+            required
+          />
+        </div>
+        <div class="col-span-12 md:col-span-6">
+          <label
+            for="surName"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:white"
+          >
+            Surname</label
+          >
+          <input
+            type="password"
+            placeholder="Password"
+            name="surName"
+            id="surName"
+            #surName="ngModel"
+            ngModel
+            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+            required
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 md:col-span-6">
+          <label
+            for="Year"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Date of birth</label
+          >
+          <select
+            name="Year"
+            id="year"
+            #Year="ngModel"
+            ngModel
+            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+            required
+          >
+            <option value="" disabled selected>Year</option>
+            <option *ngFor="let y of year" [value]="">{{ y }}</option>
+          </select>
+        </div>
+        <div class="col-span-12 md:col-span-6">
+          <label
+            for="surName"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:white"
+          >
+            Surname</label
+          >
+          <input
+            type="password"
+            placeholder="Password"
+            name="surName"
+            id="surName"
+            #surName="ngModel"
+            ngModel
+            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+            required
+          />
+        </div>
+      </div>
+      <button
+        class="btn"
+        type="submit"
+        class="w-full py-3 text-white bg-blue-600 rounded hover:bg-blue-700 font-bold"
+      >
+        Login</button
+      ><br />
+      <div class="flex justify-center">
+        <a routerLink="/forget" class="text-md text-blue-600 hover:underline"
+          >Forgotten password ?</a
+        >
+      </div>
+      <hr />
+      <button
+        class="create py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 w-full"
+      >
+        <a routerLink="/signup"> Create New Account </a>
+      </button>
+    </form>
+  </div>
+</div>

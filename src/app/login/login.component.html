@@ -1,34 +1,77 @@
-<div class="container mt-48 flex mx-auto">
-    <div class="left m-4">
-        <img class="w-72" src="assets/Facebook_logo_(2023).svg" alt="facebook">
-        <p class="text-2xl w-[72px]">Facebook helps you connect and share with the people in your life.</p>
-    </div>
-    <div
-        class="right flex flex-col bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 drak:border-gray-700">
-        <form #LoginForm="ngForm" (ngSubmit)="Login(LoginForm)" class="space-y-4 md:space-y-6">
-            <div>
-                <label for="userEmail" class="block mb-2 text-sm font-medium text-gray-900 dark:white">User
-                    Email</label>
-                <input type="email" placeholder="Email address or phone number" name="userEmail" id="userEmail"
-                    #userEmail="ngModel" ngModel
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
-                    required><br>
-            </div>
-            <div>
-                <label for="userPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:white">
-                    Password</label>
-                <input type="password" placeholder="Password" name="userPassword" id="userPassword"
-                    #userPassword="ngModel" ngModel
-                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
-                    required><br>
-
-            </div> <button class="btn">Login</button><br>
-            <div>
-                <span><a routerLink="/forget">Forgetten password ?</a></span><br>
-
-            </div>
-            <hr><br>
-            <button class="create">Create New Account</button>
-        </form>
-    </div>
+<div
+  class="container min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100 dark:bg-gray-800"
+>
+  <div class="left flex-1 flex flex-col items-center justify-center p-6">
+    <img
+      class="w-48 mb-4"
+      src="assets/Facebook_logo_(2023).svg"
+      alt="facebook"
+    />
+    <p
+      class="text-2xl md:w-72 text-center text-gray-900 dark:text-white font-semibold"
+    >
+      Facebook helps you connect and share with the people in your life.
+    </p>
+  </div>
+  <div class="right flex-1 flex items-center justify-center">
+    <form
+      #LoginForm="ngForm"
+      (ngSubmit)="Login(LoginForm)"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full space-y-6"
+    >
+      <div>
+        <label
+          for="userEmail"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:white"
+          >User Email</label
+        >
+        <input
+          type="email"
+          placeholder="Email address or phone number"
+          name="userEmail"
+          id="userEmail"
+          #userEmail="ngModel"
+          ngModel
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+          required
+        /><br />
+      </div>
+      <div>
+        <label
+          for="userPassword"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:white"
+        >
+          Password</label
+        >
+        <input
+          type="password"
+          placeholder="Password"
+          name="userPassword"
+          id="userPassword"
+          #userPassword="ngModel"
+          ngModel
+          class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+          required
+        /><br />
+      </div>
+      <button
+        class="btn"
+        type="submit"
+        class="w-full py-3 text-white bg-blue-600 rounded hover:bg-blue-700 font-bold"
+      >
+        Login</button
+      ><br />
+      <div class="flex justify-center">
+        <a routerLink="/forget" class="text-sm text-blue-600 hover:underline"
+          >Forgotten password ?</a
+        >
+      </div>
+      <hr />
+      <button
+        class="create py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 w-full"
+      >
+        <a routerLink="/signup"> Create New Account </a>
+      </button>
+    </form>
+  </div>
 </div>
