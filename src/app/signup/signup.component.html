@@ -1,117 +1,111 @@
-<div
-  class="container min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100 dark:bg-gray-800"
->
-  <div class="left flex-1 flex flex-col items-center justify-center p-6">
-    <img
-      class="w-48 mb-4"
-      src="assets/Facebook_logo_(2023).svg"
-      alt="facebook"
-    />
-  </div>
-  <div class="right flex-1 flex items-center justify-center">
-    <form
-      #SignUpForm="ngForm"
-      (ngSubmit)="Signup(SignUpForm)"
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full space-y-6"
-    >
-      <div class="flex flex-1 flex-col items-center">
-        <h3 class="font-bold text-3xl">Create a new account</h3>
-        <p class="text-gray-500">it's quick and easy.</p>
-      </div>
-      <hr />
-      <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-12 md:col-span-6">
-          <label
-            for="DOB"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >First Name</label
-          >
-          <input
-            type=""
-            placeholder="First name"
-            name="userEmail"
-            id="userEmail"
-            #firstName="ngModel"
-            ngModel
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
-            required
-          />
-        </div>
-        <div class="col-span-12 md:col-span-6">
-          <label
-            for="surName"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:white"
-          >
-            Surname</label
-          >
-          <input
-            type="password"
-            placeholder="Password"
-            name="surName"
-            id="surName"
-            #surName="ngModel"
-            ngModel
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
-            required
-          />
-        </div>
-      </div>
-      <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-12 md:col-span-6">
-          <label
-            for="Year"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Date of birth</label
-          >
-          <select
-            name="Year"
-            id="year"
-            #Year="ngModel"
-            ngModel
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
-            required
-          >
-            <option value="" disabled selected>Year</option>
-            <option *ngFor="let y of year" [value]="">{{ y }}</option>
-          </select>
-        </div>
-        <div class="col-span-12 md:col-span-6">
-          <label
-            for="surName"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:white"
-          >
-            Surname</label
-          >
-          <input
-            type="password"
-            placeholder="Password"
-            name="surName"
-            id="surName"
-            #surName="ngModel"
-            ngModel
-            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
-            required
-          />
-        </div>
-      </div>
-      <button
-        class="btn"
-        type="submit"
-        class="w-full py-3 text-white bg-blue-600 rounded hover:bg-blue-700 font-bold"
-      >
-        Login</button
-      ><br />
-      <div class="flex justify-center">
-        <a routerLink="/forget" class="text-md text-blue-600 hover:underline"
-          >Forgotten password ?</a
-        >
-      </div>
-      <hr />
-      <button
-        class="create py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 w-full"
-      >
-        <a routerLink="/signup"> Create New Account </a>
-      </button>
-    </form>
-  </div>
+<div class="container min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100 dark:bg-gray-800">
+    <div class="left flex-1 flex flex-col items-center justify-center p-6">
+        <img class="w-48 mb-4" src="assets/Facebook_logo_(2023).svg" alt="facebook" />
+    </div>
+    <div class="right flex-1 flex items-center justify-center p-4">
+        <form #SignUpForm="ngForm" (ngSubmit)="Signup(SignUpForm)"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 max-w-md w-full space-y-6">
+            <div class="flex flex-1 flex-col items-center">
+                <h3 class="font-bold text-2xl sm:text-xl">Create a new account</h3>
+                <p class="text-gray-500">it's quick and easy.</p>
+            </div>
+            <hr />
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 md:col-span-6">
+                    <label for="firstName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
+                        Name</label>
+                    <input type="" placeholder="First name" name="userEmail" id="userEmail" #firstName="ngModel" ngModel
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                        required />
+                </div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="surName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Surname</label>
+                    <input type="password" placeholder="Password" name="surName" id="surName" #surName="ngModel" ngModel
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                        required />
+                </div>
+            </div>
+            <div>
+                <label for="Year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of
+                    birth</label>
+            </div>
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-4 md:col-span-4">
+                    <select name="Date" id="Date" #Date="ngModel" ngModel
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                        required>
+                        <option value="" disabled selected>Date</option>
+                        <option *ngFor="let d of date" [value]="">{{ d }}</option>
+                    </select>
+                </div>
+                <div class="col-span-4 md:col-span-4">
+                    <select name="Month" id="month" #Month="ngModel" ngModel
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                        required>
+                        <option value="" disabled selected>Month</option>
+                        <option *ngFor="let m of month" [value]="m">{{ m }}</option>
+                    </select>
+                </div>
+                <div class="col-span-4 md:col-span-4">
+                    <select name="Year" id="year" #Year="ngModel" ngModel
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                        required>
+                        <option value="" disabled selected>Year</option>
+                        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label for="Year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
+            </div>
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-4 md:col-span-4 border p-3 rounded-lg">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">Female</span>
+                    <input
+                        class="w-4 h-4 ml-3 text-blue-600 bg-gray-50 border-gray-300 focus:ring-primary-600 rounded dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500"
+                        type="radio" name="gender" id="female" #gender="ngModel" ngModel required />
+                </div>
+                <div class="col-span-4 md:col-span-4 border rounded-lg p-3">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">Male</span>
+                    <input
+                        class="w-4 h-4 ml-3 text-blue-600 bg-gray-50 border-gray-300 focus:ring-primary-600 rounded dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500"
+                        type="radio" name="gender" id="male" #gender="ngModel" ngModel required />
+                </div>
+                <div class="col-span-4 md:col-span-4 border rounded-lg p-3">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">Other</span>
+                    <input
+                        class="w-4 h-4 ml-3 text-blue-600 bg-gray-50 border-gray-300 focus:ring-primary-600 rounded dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-500"
+                        type="radio" name="gender" id="other" #gender="ngModel" ngModel required />
+                </div>
+            </div>
+
+            <div>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="Email"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                    <input type="email" placeholder="Mobile number or email address" name="userEmail" id="userEmail"
+                        #userEmail="ngModel" ngModel
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                        required />
+                </div><br>
+                <div class="col-span-12 md:col-span-6">
+                    <label for="newPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        New password</label>
+                    <input type="password" placeholder="Password" name="newPassword" id="newPassword"
+                        #newPassword="ngModel" ngModel
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:placeholder:-gray-400 dark:text-white dark:focus:ring-blue-500"
+                        required />
+                </div><br>
+            </div>
+
+            <button class="btn" type="submit"
+                class="w-full py-3 text-white bg-blue-600 rounded hover:bg-blue-700 font-bold">
+                Signup</button>
+            <div class="flex justify-center">
+                <a routerLink="/login" class="text-md text-blue-600 hover:underline">Already have an account?</a>
+            </div>
+            <hr />
+        </form>
+    </div>
 </div>
