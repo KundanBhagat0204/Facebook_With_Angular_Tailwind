@@ -1,7 +1,27 @@
 <div class="min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
-  <div class="p-4 border-b border-gray-200 dark:border-gray-700 float-end">
-    <button (click)="toggleDarkMode()" class="px-4 py-2  rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-white">
-
+  <div class="p-4 border-b border-gray-200 dark:border-gray-700 float-end flex flex-row">
+    <nav>
+      <div>
+        <ul class="dark:text-white list-none flex flex-row gap-6 mr-4">
+          <li routerLink="/home" routerLinkActive="border-b-2 border-blue-500 text-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }" class="cursor-pointer flex items-center gap-2 pb-1">
+            <img src="assets/picture.png" alt="post" class="h-5 w-5">
+            Home
+          </li>
+          <li routerLink="/reels" routerLinkActive="border-b-2 border-blue-500 text-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }" class="cursor-pointer flex items-center gap-2 pb-1">
+            <img src="assets/instagram-reels-icon.png" alt="reels" class="h-5 w-5">
+            Reels
+          </li>
+          <li routerLink="/login" routerLinkActive="border-b-2 border-blue-500 text-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }" class="cursor-pointer flex items-center gap-2 pb-1">
+            <img src="assets/user.png" alt="reels" class="h-5 w-5">
+            Log in
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <button (click)="toggleDarkMode()" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-white">
       <svg *ngIf="!isDark" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
         stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
