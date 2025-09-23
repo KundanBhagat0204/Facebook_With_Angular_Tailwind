@@ -19,7 +19,7 @@ export class PostsService {
           },
           content: p.body,
           imageUrl: `https://picsum.photos/600/40${index}`,
-          likes: `${Math.floor(Math.random() * 100) + 1}K`,
+          likes: Math.floor(Math.random() * 100),
           comments: Math.floor(Math.random() * 20),
           shares: Math.floor(Math.random() * 10),
         }))
