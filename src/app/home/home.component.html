@@ -1,45 +1,128 @@
 <div class="float-right flex flex-col md:flex-row mt-20 mb-5">
-    <button class="bg-blue-500 dark:bg-gray-800 dark:text-white p-3 rounded">Add Post</button>
+  <button
+    class="bg-blue-500 dark:bg-gray-800 dark:text-white p-3 rounded"
+    (click)="openModal()"
+  >
+    Add Post
+  </button>
 </div>
 <div
-    class="container min-h-screen h-full flex flex-col md:flex-row items-center justify-center bg-gray-200 dark:bg-gray-800 mt-20">
-    <div class="center flex-1 flex items-center justify-center sm:w-2/4 sm:m-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-[1500px] m-4">
-            <div *ngFor="let post of posts"
-                class="border rounded-xl shadow bg-white dark:bg-gray-800 transition-transform transform hover:scale-105">
-                <!-- user Info -->
-                <div>
-                    <div class="flex items-center p-4">
-                        <img [src]="post.user.avatar" alt="avatar" class="h-10 w-10 rounded-full mr-3">
-                        <h3 class="font-semibold dark:text-white">{{post.user.name}}</h3>
-                        <p class="text-xs text-gray-500 ml-2">Just now</p>
-                    </div>
+  class="container min-h-screen h-full flex flex-col md:flex-row items-center justify-center bg-gray-200 dark:bg-gray-800 mt-20"
+>
+  <div class="center flex-1 flex items-center justify-center sm:w-2/4 sm:m-4">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-[1500px] m-4"
+    >
+      <div
+        *ngFor="let post of posts"
+        class="border rounded-xl shadow bg-white dark:bg-gray-800 transition-transform transform hover:scale-105"
+      >
+        <!-- user Info -->
+        <div>
+          <div class="flex items-center p-4">
+            <img
+              [src]="post.user.avatar"
+              alt="avatar"
+              class="h-10 w-10 rounded-full mr-3"
+            />
+            <h3 class="font-semibold dark:text-white">{{ post.user.name }}</h3>
+            <p class="text-xs text-gray-500 ml-2">Just now</p>
+          </div>
 
-                    <!-- content -->
-                    <div class="px-4 pb-2 dark:text-gray-200">
-                        {{post.content}}
-                    </div>
+          <!-- content -->
+          <div class="px-4 pb-2 dark:text-gray-200">
+            {{ post.content }}
+          </div>
 
-                    <!-- post image -->
-                    <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="post_image" class="w-full h-48 rounded-b-xl">
+          <!-- post image -->
+          <img
+            *ngIf="post.imageUrl"
+            [src]="post.imageUrl"
+            alt="post_image"
+            class="w-full h-48 rounded-b-xl"
+          />
 
-                    <!-- likes -->
-                    <div class="flex justify-between px-4 py-2 text-sm text-gray-600 dark:text-gray-400 border-t">
-                        <span>{{post.likes}}</span>
-                        <span>{{post.comments}} Comments || {{post.shares}} Shares</span>
-                    </div>
+          <!-- likes -->
+          <div
+            class="flex justify-between px-4 py-2 text-sm text-gray-600 dark:text-gray-400 border-t"
+          >
+            <span>{{ post.likes }}</span>
+            <span
+              >{{ post.comments }} Comments || {{ post.shares }} Shares</span
+            >
+          </div>
 
-                    <!-- actions -->
-                    <div class="flex justify-around border-t text-gray-600 dark:text-gray-300 text-sm">
-                        <button (click)="likePost(post)" class="flex items-center gap-1 py-2 hover:text-blue-500">👍
-                            Like</button>
-                        <button (click)="commentPost(post)" class="flex items-center gap-1 py-2 hover:text-blue-500"> 💭
-                            Comment</button>
-                        <button (click)="sharePost(post)" class="flex items-center gap-1 py-2 hover:text-blue-500">🚀
-                            Share</button>
-                    </div>
-                </div>
-            </div>
+          <!-- actions -->
+          <div
+            class="flex justify-around border-t text-gray-600 dark:text-gray-300 text-sm"
+          >
+            <button
+              (click)="likePost(post)"
+              class="flex items-center gap-1 py-2 hover:text-blue-500"
+            >
+              👍 Like
+            </button>
+            <button
+              (click)="commentPost(post)"
+              class="flex items-center gap-1 py-2 hover:text-blue-500"
+            >
+              💭 Comment
+            </button>
+            <button
+              (click)="sharePost(post)"
+              class="flex items-center gap-1 py-2 hover:text-blue-500"
+            >
+              🚀 Share
+            </button>
+          </div>
         </div>
+      </div>
+      <!-- post Modal -->
+      <div
+        *ngIf="showModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-lg relative"
+        >
+          <button
+            (click)="closeModal()"
+            class="absolute top-2 right-2 text-gray-600 dark:text-gray-300"
+          >
+            X
+          </button>
+          <h2 class="text-lg font-semibold mb-4 dark:text-white">
+            Create Post
+          </h2>
+          <form
+            [formGroup]="postForm"
+            (ngSubmit)="createPost()"
+            class="space-y-3"
+          >
+            <Textarea
+              formControlName="content"
+              placeholder="What's on Your Mind?"
+              class="w-full p-2 border dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+              rows="3"
+              required
+            ></Textarea>
+            <input type="file" (change)="onFileChange($event)" />
+            <img
+              *ngIf="previewUrl"
+              [src]="previewUrl"
+              alt="preview"
+              class="w-full rounded"
+            />
+            <button
+              type="submit"
+              [disabled]="postForm.invalid"
+              class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
+            >
+              Post
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

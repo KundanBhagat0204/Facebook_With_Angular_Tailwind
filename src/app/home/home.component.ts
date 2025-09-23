@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Post } from '../model/post.model';
 import { PostsService } from '../service/posts.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -8,7 +9,11 @@ import { PostsService } from '../service/posts.service';
 })
 export class HomeComponent {
   posts: Post[] = [];
-  constructor(private pservice: PostsService) {}
+  showModal = false;
+  postForm!: FormGroup;
+  previewUrl: string | null = null;
+
+  constructor(private pservice: PostsService, private fb: FormBuilder) {}
   ngOnInit(): void {
     // this.posts = [
     //   {
@@ -40,6 +45,41 @@ export class HomeComponent {
     this.pservice.getPosts().subscribe((data) => {
       this.posts = data;
     });
+
+    this.postForm = this.fb.group({
+      content: ['', Validators.required],
+      file: [null],
+    });
+  }
+  openModal() {
+    this.showModal = true;
+  }
+  closeModal() {
+    this.showModal = false;
+    this.postForm.reset();
+    this.previewUrl = null;
+  }
+  onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.postForm.patchValue({ file });
+      this.previewUrl = URL.createObjectURL(file);
+    }
+  }
+  createPost() {
+    if (this.postForm.invalid) return;
+    const { content, file } = this.postForm.value;
+
+    this.posts.unshift({
+      id: Date.now(),
+      user: { name: 'You', avatar: 'https://i.pravatar.cc/40' },
+      content,
+      imageUrl: this.previewUrl,
+      likes: 0,
+      comments: 0,
+      shares: 0,
+    });
+    this.closeModal();
   }
   likePost(post: Post) {
     post.likes++;

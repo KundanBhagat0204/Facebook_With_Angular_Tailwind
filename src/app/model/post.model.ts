@@ -5,7 +5,7 @@ export interface Post {
     avatar: string;
   };
   content: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   likes: number;
   comments: number;
   shares: number;
