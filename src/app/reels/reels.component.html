@@ -1,21 +1,28 @@
 <div
     class="container min-h-screen h-full flex flex-col md:flex-row items-center justify-center bg-gray-200 dark:bg-gray-800">
     <div class="center flex-1 flex items-center justify-center sm:w-2/4 sm:m-4">
-        <div class="h-screen w-full overflow-y-scroll snap-y snap-mandatory">
+        <div class="h-screen w-full overflow-y-auto snap-y snap-mandatory no-scrollbar scroll-smooth">
             <div *ngFor="let reel of reels"
-                class="snap-start h-screen w-full flex flex-col items-center justify-center relative bg-black">
+                class="snap-start h-screen w-full flex flex-col items-center justify-center relative rounded-lg bg-black mb-6">
                 <!-- video -->
-                <video #videoElement [src]="reel.videoUrl" muted plasinline class="h-full w-full object-cover"></video>
+                <video #videoElement [src]="reel.videoUrl" muted plasinline
+                    class="h-full w-full object-cover rounded-lg"></video>
 
                 <div class="absolute bottom-8 left-4 text-white">
                     <div class="flex items-center gap-2 mb-2">
                         <img [src]="reel.user.avatar" alt="user" class="h-10 w-10 rounded-full border-2 bordere-white">
                         <span class="font-semibold">{{reel.user.name}}</span>
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <span>👍{{reel.likes}}</span>
-                        <span>💬 {{reel.comments}}</span>
-                    </div>
+                </div>
+                <div
+                    class="absolute bottom-20 right-4 flex flex-col items-center gap-4 text-xl cursor-pointer text-white">
+                    <span (click)="likeReel(reel)" class="hover:scale-110 transition">👍{{reel.likes}}</span>
+                    <span (click)="commentReel(reel)" class="hover:scale-110 transition">💬 {{reel.comments}}</span>
+
+                    <button (click)="toggleMute(videoElement,reel)" class="hover:scale-110 transition">
+                        <span *ngIf="reel.isMuted">🔇</span>
+                        <span *ngIf="!reel.isMuted">🔊</span>
+                    </button>
                 </div>
             </div>
         </div>
