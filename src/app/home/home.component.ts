@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Post } from '../model/post.model';
 import { PostsService } from '../service/posts.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { addDays, formatDistance } from 'date-fns';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -66,12 +67,18 @@ export class HomeComponent {
       this.previewUrl = URL.createObjectURL(file);
     }
   }
+
   createPost() {
+    const now = new Date();
+    const future = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const distance = formatDistance(now, future);
+    console.log(distance);
     if (this.postForm.invalid) return;
     const { content, file } = this.postForm.value;
 
     this.posts.unshift({
       id: Date.now(),
+      timeAgo: distance,
       user: { name: 'You', avatar: 'https://i.pravatar.cc/40' },
       content,
       imageUrl: this.previewUrl,

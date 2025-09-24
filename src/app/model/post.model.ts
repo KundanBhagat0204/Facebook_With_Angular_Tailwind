@@ -1,5 +1,6 @@
 export interface Post {
   id: number;
+  timeAgo?: string;
   user: {
     name: string;
     avatar: string;
