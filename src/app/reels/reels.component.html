@@ -16,12 +16,16 @@
                 </div>
                 <div
                     class="absolute bottom-20 right-4 flex flex-col items-center gap-4 text-xl cursor-pointer text-white">
-                    <span (click)="likeReel(reel)" class="hover:scale-110 transition">👍{{reel.likes}}</span>
-                    <span (click)="commentReel(reel)" class="hover:scale-110 transition">💬 {{reel.comments}}</span>
+                    <span (click)="likeReel(reel)" class="hover:scale-110 transition"><img src="assets/like.png" alt=""
+                            style="width: 20px; height: 20px;">{{reel.likes}}</span>
+                    <span (click)="commentReel(reel)" class="hover:scale-110 transition"><img src="assets/chat.png"
+                            alt="" style="width: 20px; height: 20px;">{{reel.comments}}</span>
 
                     <button (click)="toggleMute(videoElement,reel)" class="hover:scale-110 transition">
-                        <span *ngIf="reel.isMuted">🔇</span>
-                        <span *ngIf="!reel.isMuted">🔊</span>
+                        <span *ngIf="reel.isMuted"><img src="assets/mute.png" alt=""
+                                style="width: 20px; height: 20px;"></span>
+                        <span *ngIf="!reel.isMuted"><img src="assets/volume.png" alt=""
+                                style="width: 20px; height: 20px;"></span>
                     </button>
                 </div>
             </div>
