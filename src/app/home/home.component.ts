@@ -2,56 +2,61 @@ import { Component } from '@angular/core';
 import { Post } from '../model/post.model';
 import { PostsService } from '../service/posts.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { addDays, formatDistance } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
+
+const avatars = [
+  'https://i.pravatar.cc/40?img=3',
+  'https://i.pravatar.cc/40?img=4',
+  'https://i.pravatar.cc/40?img=5',
+];
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  posts: Post[] = [];
+  posts: any[] = [];
   showModal = false;
   postForm!: FormGroup;
   previewUrl: string | null = null;
+  // Mood selector
+  mood: string = 'happy';
+  moodList = [
+    { value: 'happy', emoji: '😊' },
+    { value: 'sad', emoji: '😢' },
+    { value: 'excited', emoji: '🤩' },
+    { value: 'tired', emoji: '😴' },
+  ];
+  // Emoji reactions
+  reactionList = [
+    { emoji: '🔥' },
+    { emoji: '💯' },
+    { emoji: '😆' },
+    { emoji: '👏' },
+    { emoji: '😭' },
+  ];
 
   constructor(private pservice: PostsService, private fb: FormBuilder) {}
-  ngOnInit(): void {
-    // this.posts = [
-    //   {
-    //     id: 1,
-    //     user: {
-    //       name: 'Kundan Bhagat',
-    //       avatar:
-    //         'https://tse3.mm.bing.net/th/id/OIP.UxhCQPPe5EQMiSPKObh-dAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',
-    //     },
-    //     content: 'Loving this sunny day!',
-    //     imageUrl: 'https://picsum.photos/600/400',
-    //     likes: 25,
-    //     comments: 4,
-    //     shares: 2,
-    //   },
-    //   {
-    //     id: 2,
-    //     user: {
-    //       name: 'Ruturaj Patil',
-    //       avatar: 'https://i.pravatar.cc/40?img=2',
-    //     },
-    //     content: 'Check out this amazing view ',
-    //     imageUrl: 'https://picsum.photos/600/401',
-    //     likes: 40,
-    //     comments: 10,
-    //     shares: 5,
-    //   },
-    // ];
-    this.pservice.getPosts().subscribe((data) => {
-      this.posts = data;
-    });
 
+  ngOnInit(): void {
+    this.pservice.getPosts().subscribe((data) => {
+      this.posts = data.map((post: any) => ({
+        ...post,
+        timeAgo: this.computeTimeAgo(post.createdAt || new Date()),
+        comments: post.comments || [],
+        newComment: '',
+        liked: false,
+        showHeart: false,
+        reaction: '',
+      }));
+    });
     this.postForm = this.fb.group({
       content: ['', Validators.required],
       file: [null],
     });
   }
+
   openModal() {
     this.showModal = true;
   }
@@ -59,42 +64,92 @@ export class HomeComponent {
     this.showModal = false;
     this.postForm.reset();
     this.previewUrl = null;
+    this.mood = 'happy';
   }
   onFileChange(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file!');
+        return;
+      }
       this.postForm.patchValue({ file });
       this.previewUrl = URL.createObjectURL(file);
     }
   }
+  removeImage() {
+    this.previewUrl = null;
+    this.postForm.patchValue({ file: null });
+  }
 
   createPost() {
-    const now = new Date();
-    const future = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    const distance = formatDistance(now, future);
-    console.log(distance);
     if (this.postForm.invalid) return;
     const { content, file } = this.postForm.value;
-
+    const now = new Date();
     this.posts.unshift({
       id: Date.now(),
-      timeAgo: distance,
+      timeAgo: 'Just now',
       user: { name: 'You', avatar: 'https://i.pravatar.cc/40' },
       content,
       imageUrl: this.previewUrl,
       likes: 0,
-      comments: 0,
+      comments: [],
+      newComment: '',
       shares: 0,
+      createdAt: now,
+      mood: this.mood,
+      liked: false,
+      showHeart: false,
+      reaction: '',
     });
     this.closeModal();
   }
-  likePost(post: Post) {
-    post.likes++;
+
+  likePost(post: any, dblTap = false) {
+    if (!post.liked) post.likes++;
+    else post.likes--;
+    post.liked = !post.liked;
+
+    // Instagram-style animated heart for double-tap on image or icon
+    if (dblTap) {
+      post.showHeart = true;
+      setTimeout(() => (post.showHeart = false), 900);
+      if (!post.liked) post.liked = true; // ensure like on dbltap
+    }
   }
-  commentPost(post: Post) {
-    post.comments++;
+
+  addComment(post: any) {
+    if (!post.newComment?.trim()) return;
+    post.comments.push({
+      name: 'You',
+      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      timeAgo: 'Just now',
+      text: post.newComment,
+    });
+    post.newComment = '';
   }
-  sharePost(post: Post) {
+  replyComment(post: any, comment: any) {
+    post.newComment = `@${comment.name} `;
+    setTimeout(() => {
+      const input = document.querySelector(
+        'input[name="comment"]'
+      ) as HTMLElement;
+      input?.focus();
+    }, 0);
+  }
+  // Unique: Animated sticker reaction
+  addReaction(post: any, reaction: any) {
+    post.reaction = reaction.emoji;
+    setTimeout(() => (post.reaction = ''), 1500);
+  }
+
+  private computeTimeAgo(date: Date): string {
+    return formatDistanceToNow(new Date(date), { addSuffix: true });
+  }
+  sharePost(post: any) {
     post.shares++;
+  }
+  toggleCommentBox(post: any) {
+    post.showCommentBox = !post.showCommentBox;
   }
 }

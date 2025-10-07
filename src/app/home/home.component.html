@@ -1,72 +1,224 @@
-<div class="float-right flex flex-col md:flex-row mt-20 mb-5">
-  <button class="bg-blue-500 dark:bg-gray-800 dark:text-white p-3 rounded" (click)="openModal()">
-    Add Post
-  </button>
-</div>
-<div
-  class="container min-h-screen h-full flex flex-col md:flex-row items-center justify-center bg-gray-200 dark:bg-gray-800 mt-20">
-  <div class="center flex-1 flex items-center justify-center sm:w-2/4 sm:m-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-[1500px] m-4">
-      <div *ngFor="let post of posts"
-        class="border rounded-xl shadow bg-white dark:bg-gray-800 transition-transform transform hover:scale-105">
-        <!-- user Info -->
-        <div>
-          <div class="flex items-center p-4">
-            <img [src]="post.user.avatar" alt="avatar" class="h-10 w-10 rounded-full mr-3" />
-            <h3 class="font-semibold dark:text-white">{{ post.user.name }}</h3>
-            <p class="text-xs text-gray-500 ml-2">{{post.timeAgo}}</p>
-          </div>
+<button
+  type="button"
+  class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 px-4 sm:px-5 rounded-full flex items-center space-x-2 shadow-lg transition-transform transform hover:scale-105 z-50"
+  (click)="openModal()"
+  aria-label="Create Post"
+>
+  <svg
+    class="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M12 4v16m8-8H4"
+    ></path>
+  </svg>
+  <span class="hidden sm:inline">Add Post</span>
+</button>
 
-          <!-- content -->
-          <div class="px-4 pb-2 dark:text-gray-200">
-            {{ post.content }}
-          </div>
-
-          <!-- post image -->
-          <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="post_image" class="w-full h-48 rounded-b-xl" />
-
-          <!-- likes -->
-          <div class="flex justify-between px-4 py-2 text-sm text-gray-600 dark:text-gray-400 border-t">
-            <span>{{ post.likes }}K</span>
-            <span>{{ post.comments }} Comments || {{ post.shares }} Shares</span>
-          </div>
-
-          <!-- actions -->
-          <div class="flex justify-around border-t text-gray-600 dark:text-gray-300 text-sm">
-            <button (click)="likePost(post)" class="flex items-center gap-1 py-2 hover:text-blue-500">
-              <img src="assets/like.png" alt="like" style="width: 20px; height: 20px;">
-            </button>
-            <button (click)="commentPost(post)" class="flex items-center gap-1 py-2 hover:text-blue-500">
-              <img src="assets/chat.png" alt="comment" style="width: 20px; height: 20px;">
-            </button>
-            <button (click)="sharePost(post)" class="flex items-center gap-1 py-2 hover:text-blue-500">
-              <img src="assets/send.png" alt="send" style="width: 20px; height: 20px;">
-            </button>
+<!-- Main Post Stream -->
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900 pt-20 px-2 sm:px-4">
+  <div class="w-full max-w-7xl mx-auto space-y-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <div
+        *ngFor="let post of posts"
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+      >
+        <!-- User Info -->
+        <div class="flex items-center p-4">
+          <img
+            [src]="post.user.avatar"
+            class="w-11 h-11 rounded-full border-2 border-blue-400 mr-3"
+            alt="User avatar"
+          />
+          <div>
+            <h3 class="font-semibold text-gray-700 dark:text-white">
+              {{ post.user.name }}
+            </h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              {{ post.timeAgo }}
+            </p>
           </div>
         </div>
-      </div>
-      <!-- post Modal -->
-      <div *ngIf="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full max-w-lg relative">
-          <button (click)="closeModal()" class="absolute top-2 right-2 text-gray-600 dark:text-gray-300">
-            X
+
+        <!-- Content -->
+        <div class="px-4 pb-4 text-gray-800 dark:text-gray-200">
+          {{ post.content }}
+        </div>
+
+        <!-- Post Image -->
+        <div class="relative group">
+          <img
+            *ngIf="post.imageUrl"
+            [src]="post.imageUrl"
+            class="w-full h-48 sm:h-56 md:h-64 object-cover rounded-lg"
+            (dblclick)="likePost(post, true)"
+            style="cursor: pointer"
+            alt="Post Image"
+          />
+          <!-- Heart Animation on Double Click -->
+          <svg
+            *ngIf="post.showHeart"
+            class="absolute inset-0 m-auto w-20 h-20 text-pink-500 opacity-75"
+            style="transform: translateZ(0)"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+                 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09
+                 C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
+                 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+        </div>
+
+        <!-- Likes & Shares -->
+        <div
+          class="flex justify-between px-4 py-2 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400"
+        >
+          <div class="flex items-center space-x-2">
+            <button
+              (click)="likePost(post)"
+              class="focus:outline-none"
+              [ngClass]="{ 'text-pink-600': post.liked }"
+            >
+              <img
+                src="assets/like.png"
+                class="w-5 h-5 inline-block"
+                alt="like icon"
+              />
+            </button>
+            <span>{{ post.likes }} Likes</span>
+          </div>
+          <div>
+            {{ post.comments.length }} Comments | {{ post.shares }} Shares
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div
+          class="flex justify-around px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+        >
+          <button
+            (click)="likePost(post)"
+            class="flex items-center space-x-1 hover:text-blue-500 transition"
+          >
+            <img src="assets/like.png" class="w-5 h-5" alt="like" />
+            <span>Like</span>
           </button>
-          <h2 class="text-lg font-semibold mb-4 dark:text-white">
-            Create Post
-          </h2>
-          <form [formGroup]="postForm" (ngSubmit)="createPost()" class="space-y-3">
-            <textarea formControlName="content" placeholder="What's on Your Mind?"
-              class="w-full p-2 border dark:border-gray-700 dark:bg-gray-700 dark:text-white" rows="3"
-              required></textarea>
-            <input type="file" (change)="onFileChange($event)" />
-            <img *ngIf="previewUrl" [src]="previewUrl" alt="preview" class="w-full rounded" />
-            <button type="submit" [disabled]="postForm.invalid"
-              class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full">
+          <button
+            (click)="toggleCommentBox(post)"
+            class="flex items-center space-x-1 hover:text-blue-500 transition"
+          >
+            <img src="assets/chat.png" class="w-5 h-5" alt="comment" />
+            <span>Comment</span>
+          </button>
+          <button
+            (click)="sharePost(post)"
+            class="flex items-center space-x-1 hover:text-blue-500 transition"
+          >
+            <img src="assets/send.png" class="w-5 h-5" alt="share" />
+            <span>Share</span>
+          </button>
+        </div>
+
+        <!-- Comment Input Box -->
+        <div *ngIf="post.showCommentBox" class="px-4 pb-4">
+          <form (ngSubmit)="addComment(post)" novalidate>
+            <input
+              [(ngModel)]="post.newComment"
+              name="comment"
+              placeholder="Write a comment..."
+              class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              type="submit"
+              class="mt-2 bg-blue-500 hover:bg-blue-600 text-white py-1 px-4 rounded-lg transition"
+            >
               Post
             </button>
           </form>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Post Creation Modal -->
+<div
+  *ngIf="showModal"
+  class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl relative shadow-lg overflow-y-auto max-h-[90vh]"
+  >
+    <button
+      (click)="closeModal()"
+      class="absolute top-2 right-4 text-gray-600 dark:text-gray-300 text-2xl hover:text-red-500"
+    >
+      &times;
+    </button>
+    <h2
+      class="text-xl font-semibold mb-4 text-center text-gray-800 dark:text-gray-200"
+    >
+      Create a Post
+    </h2>
+    <form
+      [formGroup]="postForm"
+      (ngSubmit)="createPost()"
+      class="space-y-4"
+      novalidate
+    >
+      <textarea
+        formControlName="content"
+        placeholder="What's on your mind?"
+        class="w-full p-3 rounded-lg border border-gray-300 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+        rows="4"
+        required
+      ></textarea>
+      <div class="flex flex-col items-center space-y-2">
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileChange($event)"
+          class="w-full"
+        />
+        <div *ngIf="previewUrl" class="relative w-full">
+          <img
+            [src]="previewUrl"
+            class="w-full h-48 sm:h-56 md:h-64 object-cover rounded-lg"
+            alt="preview image"
+          />
+          <button
+            type="button"
+            (click)="removeImage()"
+            class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full hover:bg-red-600 transition"
+          >
+            X
+          </button>
+        </div>
+      </div>
+      <div class="flex justify-end space-x-4">
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-lg transition"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="postForm.invalid"
+          class="px-4 py-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white rounded-lg transition"
+        >
+          Post
+        </button>
+      </div>
+    </form>
   </div>
 </div>
