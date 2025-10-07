@@ -10,4 +10,5 @@ export interface Post {
   likes: number;
   comments: number;
   shares: number;
+  createdAt: any;
 }
