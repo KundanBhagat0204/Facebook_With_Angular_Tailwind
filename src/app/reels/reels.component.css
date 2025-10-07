@@ -1,0 +1,17 @@
+@keyframes heart-pop {
+  0% {
+    opacity: 1;
+    transform: scale(0.2);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+.filter-grayscale {
+  filter: grayscale(80%);
+}

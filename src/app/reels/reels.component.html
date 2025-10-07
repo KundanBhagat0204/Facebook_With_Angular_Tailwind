@@ -1,34 +1,204 @@
 <div
-    class="container min-h-screen h-full flex flex-col md:flex-row items-center justify-center bg-gray-200 dark:bg-gray-800">
-    <div class="center flex-1 flex items-center justify-center sm:w-2/4 sm:m-4">
-        <div class="h-screen w-full overflow-y-auto snap-y snap-mandatory no-scrollbar scroll-smooth">
-            <div *ngFor="let reel of reels"
-                class="snap-start h-screen w-full flex flex-col items-center justify-center relative rounded-lg bg-black mb-6">
-                <!-- video -->
-                <video #videoElement [src]="reel.videoUrl" muted plasinline
-                    class="h-full w-full object-cover rounded-lg"></video>
+  class="container min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-800 px-2 md:px-6 py-10"
+>
+  <div class="center flex-1 flex items-center justify-center sm:w-2/4 sm:m-4">
+    <div
+      class="h-screen w-full overflow-y-auto snap-y snap-mandatory no-scrollbar scroll-smooth rounded-lg shadow-lg bg-black relative"
+      style="max-width: 430px"
+    >
+      <div
+        *ngFor="let reel of reels"
+        class="snap-start h-screen w-full flex flex-col items-center justify-center relative rounded-lg bg-black mb-6 overflow-hidden select-none"
+      >
+        <!-- Video -->
+        <video
+          #videoElement
+          [src]="reel.videoUrl"
+          muted
+          playsinline
+          class="h-full w-full object-cover rounded-lg"
+          (timeupdate)="updateProgress($event, reel)"
+          (dblclick)="handleDoubleTap(reel)"
+          [class.filter-grayscale]="reel.isMuted"
+          preload="metadata"
+          autoplay
+          [muted]="reel.isMuted"
+        ></video>
 
-                <div class="absolute bottom-8 left-4 text-white">
-                    <div class="flex items-center gap-2 mb-2">
-                        <img [src]="reel.user.avatar" alt="user" class="h-10 w-10 rounded-full border-2 bordere-white">
-                        <span class="font-semibold">{{reel.user.name}}</span>
-                    </div>
-                </div>
-                <div
-                    class="absolute bottom-20 right-4 flex flex-col items-center gap-4 text-xl cursor-pointer text-white">
-                    <span (click)="likeReel(reel)" class="hover:scale-110 transition"><img src="assets/like.png" alt=""
-                            style="width: 20px; height: 20px;">{{reel.likes}}</span>
-                    <span (click)="commentReel(reel)" class="hover:scale-110 transition"><img src="assets/chat.png"
-                            alt="" style="width: 20px; height: 20px;">{{reel.comments}}</span>
+        <!-- Reel Progress Bar -->
+        <div
+          class="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-pink-500 to-blue-500 transition-width duration-300"
+          [style.width.%]="reel.progress"
+        ></div>
 
-                    <button (click)="toggleMute(videoElement,reel)" class="hover:scale-110 transition">
-                        <span *ngIf="reel.isMuted"><img src="assets/mute.png" alt=""
-                                style="width: 20px; height: 20px;"></span>
-                        <span *ngIf="!reel.isMuted"><img src="assets/volume.png" alt=""
-                                style="width: 20px; height: 20px;"></span>
-                    </button>
-                </div>
-            </div>
+        <!-- Overlay: Description & User -->
+        <div
+          class="absolute bottom-24 left-4 max-w-[80%] sm:max-w-[60%] md:max-w-[45%] lg:max-w-[35%] xl:max-w-[30%] text-white bg-black bg-opacity-50 backdrop-blur px-3 py-2 rounded-md truncate cursor-pointer"
+          [title]="reel.description"
+        >
+          {{ reel.description }}
         </div>
+
+        <!-- User Info -->
+        <div
+          class="absolute bottom-8 left-4 text-white flex items-center space-x-3 bg-black bg-opacity-40 px-3 py-1 rounded-full backdrop-blur"
+        >
+          <img
+            [src]="reel.user.avatar"
+            alt="user avatar"
+            class="h-10 w-10 rounded-full border-2 border-white object-cover"
+            loading="lazy"
+          />
+          <span class="font-semibold text-lg">{{ reel.user.name }}</span>
+        </div>
+
+        <!-- View count -->
+        <div
+          class="absolute top-4 left-4 bg-black bg-opacity-50 backdrop-blur text-white rounded-full px-3 py-1 font-semibold select-none"
+          title="Views"
+        >
+          👁️ {{ reel.views | number }}
+        </div>
+
+        <!-- Action Buttons -->
+        <div
+          class="absolute bottom-20 right-4 flex flex-col items-center space-y-5 text-xl cursor-pointer text-white"
+          aria-label="Reel actions"
+          style="width: 3rem"
+        >
+          <!-- Like -->
+          <button
+            (click)="likeReel(reel)"
+            class="flex flex-col items-center justify-center hover:scale-110 transition transform"
+            aria-label="Like reel"
+            type="button"
+          >
+            <img src="assets/like.png" alt="Like icon" class="w-6 h-6" />
+            <span class="mt-1 text-base font-semibold">{{ reel.likes }}</span>
+          </button>
+
+          <!-- Comment -->
+          <button
+            (click)="commentReel(reel)"
+            class="flex flex-col items-center justify-center hover:scale-110 transition transform"
+            aria-label="Comment on reel"
+            type="button"
+          >
+            <img src="assets/chat.png" alt="Comment icon" class="w-6 h-6" />
+            <span class="mt-1 text-base font-semibold">{{
+              reel.comments
+            }}</span>
+          </button>
+
+          <!-- Mute Toggle -->
+          <button
+            (click)="toggleMute(getVideoElementByUrl(reel.videoUrl), reel)"
+            class="flex flex-col items-center justify-center hover:scale-110 transition transform"
+            aria-label="Toggle mute"
+            type="button"
+          >
+            <img
+              *ngIf="reel.isMuted"
+              src="assets/mute.png"
+              alt="Muted icon"
+              class="w-6 h-6"
+            />
+            <img
+              *ngIf="!reel.isMuted"
+              src="assets/volume.png"
+              alt="Volume icon"
+              class="w-6 h-6"
+            />
+            <span class="mt-1 text-base font-semibold">Mute</span>
+          </button>
+
+          <!-- Save / Unsave Reel -->
+          <button
+            (click)="toggleSaveReel(reel)"
+            class="flex flex-col items-center justify-center hover:scale-110 transition transform"
+            aria-label="Save reel"
+            type="button"
+          >
+            <img
+              *ngIf="!reel.saved"
+              [src]="saveIcon"
+              alt="Save icon"
+              class="w-6 h-6"
+            />
+            <img
+              *ngIf="reel.saved"
+              [src]="savedIcon"
+              alt="Saved icon"
+              class="w-6 h-6"
+            />
+            <span class="mt-1 text-base font-semibold">
+              {{ reel.saved ? "Saved" : "Save" }}
+            </span>
+          </button>
+
+          <!-- Share button triggers Modal -->
+          <button
+            (click)="openShareModal(reel)"
+            class="flex flex-col items-center justify-center hover:scale-110 transition transform"
+            aria-label="Share reel"
+            type="button"
+          >
+            <img src="assets/send.png" alt="Share icon" class="w-6 h-6" />
+            <span class="mt-1 text-base font-semibold">Share</span>
+          </button>
+        </div>
+
+        <!-- Double tap heart animation -->
+        <svg
+          *ngIf="reel.showHeart"
+          class="absolute inset-0 m-auto w-24 h-24 text-pink-500 opacity-75 pointer-events-none"
+          style="transform: translateZ(0); animation: heart-pop 0.8s forwards"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+          />
+        </svg>
+      </div>
     </div>
+
+    <!-- Share Modal -->
+    <div
+      *ngIf="showShareModal"
+      class="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-70"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full shadow-lg relative"
+      >
+        <button
+          (click)="closeShareModal()"
+          class="absolute top-3 right-3 text-gray-600 dark:text-gray-300 hover:text-red-500 text-xl"
+          aria-label="Close share modal"
+        >
+          &times;
+        </button>
+        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+          Share Reel
+        </h3>
+        <input
+          type="text"
+          readonly
+          [value]="shareLink"
+          class="w-full px-4 py-2 rounded-md border border-gray-300 dark:bg-gray-700 dark:text-white focus:outline-none"
+        />
+        <button
+          (click)="copyShareLink()"
+          class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
+        >
+          Copy Link
+        </button>
+        <p *ngIf="copied" class="text-green-600 mt-2 text-center">Copied!</p>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Heart Pop Animation Keyframe -->

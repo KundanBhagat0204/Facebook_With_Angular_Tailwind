@@ -10,7 +10,7 @@ export class ReelsService {
 
   private reelsUrl =
     'https://gist.githubusercontent.com/poudyalanil/ca84582cbeb4fc123a13290a586da925/raw/videos.json';
-  getReels(): Observable<any> {
+  getReels(): Observable<any[]> {
     return this.http.get<any[]>(this.reelsUrl).pipe(
       map((videos) =>
         videos.slice(0, 10).map((v, index) => ({
@@ -20,8 +20,14 @@ export class ReelsService {
             avatar: `https://i.pravatar.cc/150?img=${index + 5}`,
           },
           videoUrl: v.videoUrl,
+          description: v.description || 'No description provided.',
           likes: Math.floor(Math.random() * 500),
           comments: Math.floor(Math.random() * 200),
+          views: Math.floor(Math.random() * 10000) + 1000,
+          isMuted: true,
+          progress: 0,
+          showHeart: false,
+          saved: false,
         }))
       )
     );
