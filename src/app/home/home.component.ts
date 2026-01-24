@@ -37,20 +37,26 @@ export class HomeComponent {
     { emoji: '😭' },
   ];
 
-  constructor(private pservice: PostsService, private fb: FormBuilder) {}
+  constructor(private pservice: PostsService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.pservice.getPosts().subscribe((data) => {
-      this.posts = data.map((post: any) => ({
-        ...post,
-        timeAgo: this.computeTimeAgo(post.createdAt || new Date()),
-        comments: post.comments || [],
-        newComment: '',
-        liked: false,
-        showHeart: false,
-        reaction: '',
-      }));
-    });
+    const storedPosts = localStorage.getItem('posts');
+    if (storedPosts) {
+      this.posts = JSON.parse(storedPosts);
+    } else {
+      this.pservice.getPosts().subscribe((data) => {
+        this.posts = data.map((post: any) => ({
+          ...post,
+          timeAgo: this.computeTimeAgo(post.createdAt || new Date()),
+          comments: [], // Initialize as empty array
+          newComment: '',
+          liked: false,
+          showHeart: false,
+          reaction: '',
+        }));
+        this.savePosts();
+      });
+    }
     this.postForm = this.fb.group({
       content: ['', Validators.required],
       file: [null],
@@ -86,12 +92,12 @@ export class HomeComponent {
     if (this.postForm.invalid) return;
     const { content, file } = this.postForm.value;
     const now = new Date();
-    this.posts.unshift({
+    const newPost = {
       id: Date.now(),
       timeAgo: 'Just now',
       user: { name: 'You', avatar: 'https://i.pravatar.cc/40' },
       content,
-      imageUrl: this.previewUrl,
+      imageUrl: this.previewUrl || null,
       likes: 0,
       comments: [],
       newComment: '',
@@ -101,7 +107,9 @@ export class HomeComponent {
       liked: false,
       showHeart: false,
       reaction: '',
-    });
+    };
+    this.posts = [newPost, ...this.posts];
+    this.savePosts();
     this.closeModal();
   }
 
@@ -116,6 +124,7 @@ export class HomeComponent {
       setTimeout(() => (post.showHeart = false), 900);
       if (!post.liked) post.liked = true; // ensure like on dbltap
     }
+    this.savePosts();
   }
 
   addComment(post: any) {
@@ -126,8 +135,11 @@ export class HomeComponent {
       timeAgo: 'Just now',
       text: post.newComment,
     });
+
     post.newComment = '';
+    this.savePosts();
   }
+
   replyComment(post: any, comment: any) {
     post.newComment = `@${comment.name} `;
     setTimeout(() => {
@@ -137,6 +149,7 @@ export class HomeComponent {
       input?.focus();
     }, 0);
   }
+
   // Unique: Animated sticker reaction
   addReaction(post: any, reaction: any) {
     post.reaction = reaction.emoji;
@@ -146,10 +159,17 @@ export class HomeComponent {
   private computeTimeAgo(date: Date): string {
     return formatDistanceToNow(new Date(date), { addSuffix: true });
   }
+
   sharePost(post: any) {
     post.shares++;
+    this.savePosts();
   }
+
   toggleCommentBox(post: any) {
     post.showCommentBox = !post.showCommentBox;
+  }
+
+  savePosts() {
+    localStorage.setItem('posts', JSON.stringify(this.posts));
   }
 }

@@ -4,8 +4,10 @@ import {
   QueryList,
   ViewChildren,
   AfterViewInit,
+  HostListener,
 } from '@angular/core';
 import { ReelsService } from '../service/reels.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 interface Reel {
   id: number;
@@ -19,12 +21,36 @@ interface Reel {
   progress?: number;
   showHeart?: boolean;
   saved?: boolean;
+  commentsList?: any[];
+  newComment?: string;
+  showCommentBox?: boolean;
+  showDescriptionModal?: boolean;
 }
 
 @Component({
   selector: 'app-reels',
   templateUrl: './reels.component.html',
   styleUrls: ['./reels.component.css'],
+  animations: [
+    trigger('slideUp', [
+      transition(':enter', [
+        style({
+          transform: 'translateY(100%)',
+          opacity: 0
+        }),
+        animate('300ms ease-out', style({
+          transform: 'translateY(0)',
+          opacity: 1
+        }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({
+          transform: 'translateY(100%)',
+          opacity: 0
+        }))
+      ])
+    ])
+  ]
 })
 export class ReelsComponent implements AfterViewInit {
   reels: Reel[] = [];
@@ -54,6 +80,10 @@ export class ReelsComponent implements AfterViewInit {
         showHeart: false,
         saved: false,
         views: r.views || Math.floor(Math.random() * 10000 + 1000),
+        commentsList: [],
+        newComment: '',
+        showCommentBox: false,
+        showDescriptionModal: false,
       }));
     });
   }
@@ -113,7 +143,27 @@ export class ReelsComponent implements AfterViewInit {
   }
 
   commentReel(reel: Reel) {
-    reel.comments++;
+    reel.showCommentBox = !reel.showCommentBox;
+  }
+
+  addComment(reel: Reel) {
+    if (!reel.newComment?.trim()) return;
+    
+    const avatars = [
+      'https://i.pravatar.cc/40?img=3',
+      'https://i.pravatar.cc/40?img=4',
+      'https://i.pravatar.cc/40?img=5',
+    ];
+    
+    reel.commentsList!.push({
+      name: 'You',
+      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      timeAgo: 'Just now',
+      text: reel.newComment,
+    });
+
+    reel.comments = reel.commentsList!.length;
+    reel.newComment = '';
   }
 
   updateProgress(event: Event, reel: Reel) {
@@ -150,5 +200,18 @@ export class ReelsComponent implements AfterViewInit {
       this.copied = true;
       setTimeout(() => (this.copied = false), 2000);
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    // Check if click is outside any description modal
+    if (!target.closest('.description-modal') && !target.closest('.three-dots-button')) {
+      this.reels.forEach(reel => {
+        if (reel.showDescriptionModal) {
+          reel.showDescriptionModal = false;
+        }
+      });
+    }
   }
 }

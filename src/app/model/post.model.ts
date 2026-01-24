@@ -8,7 +8,12 @@ export interface Post {
   content: string;
   imageUrl?: string | null;
   likes: number;
-  comments: number;
+  comments: any[]; // Updated to array
   shares: number;
   createdAt: any;
+  liked?: boolean;
+  showHeart?: boolean;
+  reaction?: string;
+  newComment?: string;
+  showCommentBox?: boolean;
 }

@@ -1,14 +1,14 @@
 <div
-  class="container min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-800 px-2 md:px-6 py-10"
+  class="container min-h-screen flex items-center justify-center px-2 md:px-6 py-10"
 >
   <div class="center flex-1 flex items-center justify-center sm:w-2/4 sm:m-4">
     <div
-      class="h-screen w-full overflow-y-auto snap-y snap-mandatory no-scrollbar scroll-smooth rounded-lg shadow-lg bg-black relative"
-      style="max-width: 430px"
+      class="h-[600px] w-full overflow-y-auto snap-y snap-mandatory no-scrollbar scroll-smooth rounded-lg shadow-lg bg-black relative"
+      style="max-width: 350px"
     >
       <div
         *ngFor="let reel of reels"
-        class="snap-start h-screen w-full flex flex-col items-center justify-center relative rounded-lg bg-black mb-6 overflow-hidden select-none"
+        class="snap-start h-[600px] w-full flex flex-col items-center justify-center relative rounded-lg bg-black mb-6 overflow-hidden select-none"
       >
         <!-- Video -->
         <video
@@ -32,11 +32,94 @@
         ></div>
 
         <!-- Overlay: Description & User -->
-        <div
-          class="absolute bottom-24 left-4 max-w-[80%] sm:max-w-[60%] md:max-w-[45%] lg:max-w-[35%] xl:max-w-[30%] text-white bg-black bg-opacity-50 backdrop-blur px-3 py-2 rounded-md truncate cursor-pointer"
-          [title]="reel.description"
-        >
-          {{ reel.description }}
+        <div class="absolute bottom-24 left-0 right-0 px-4">
+          <div class="flex items-start">
+            <!-- Description Box -->
+            <div class="bg-black/60 backdrop-blur-sm rounded-lg p-3 max-w-[83%] ml-2">
+              <p class="text-white text-sm line-clamp-2">
+                {{ reel.description }}
+              </p>
+            
+            <!-- Three Dots Button -->
+            <button 
+              (click)="reel.showDescriptionModal = !reel.showDescriptionModal"
+              class="three-dots-button p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-full transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              </svg>
+            </button>
+            </div>
+          </div>
+
+          <!-- Description Modal - appears from bottom to top -->
+          <div 
+            *ngIf="reel.showDescriptionModal"
+            class="description-modal absolute bottom-full left-2 mb-2 max-w-[75%] ml-3 max-w-xs h-[40vh]"
+            [@slideUp]
+          >
+            <div class="bg-gradient-to-r from-purple-600/95 via-pink-600/95 to-blue-600/95 backdrop-blur-xl rounded-lg p-4 shadow-2xl border border-white/30 h-full flex flex-col">
+              <!-- Modal Header -->
+              <div class="flex items-center justify-between mb-3 flex-shrink-0">
+                <h4 class="text-white font-bold text-lg flex items-center">
+                  <span class="mr-2">📝</span> Description
+                </h4>
+                <div class="flex items-center space-x-2">
+                  <div class="flex space-x-1">
+                    <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                    <span class="w-2 h-2 bg-white rounded-full animate-pulse delay-75"></span>
+                    <span class="w-2 h-2 bg-white rounded-full animate-pulse delay-150"></span>
+                  </div>
+                  <button 
+                    (click)="reel.showDescriptionModal = false"
+                    class="text-white/80 hover:text-white hover:bg-white/20 rounded-full p-1 transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Scrollable Content Area -->
+              <div class="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-transparent">
+                <!-- Description Content with Emojis and Hashtags -->
+                <div class="bg-black/20 rounded-lg p-3 mb-3">
+                  <p class="text-white text-sm leading-relaxed mb-2">
+                    {{ reel.description }}
+                  </p>
+                  
+                  <!-- Emojis Section -->
+                  <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-yellow-300 text-xs">😍</span>
+                    <span class="text-pink-300 text-xs">❤️</span>
+                    <span class="text-blue-300 text-xs">🔥</span>
+                    <span class="text-green-300 text-xs">✨</span>
+                    <span class="text-purple-300 text-xs">🎯</span>
+                  </div>
+
+                  <!-- Hashtags Section -->
+                  <div class="flex flex-wrap gap-1">
+                    <span class="bg-blue-500/30 text-blue-200 text-xs px-2 py-1 rounded-full">#trending</span>
+                    <span class="bg-pink-500/30 text-pink-200 text-xs px-2 py-1 rounded-full">#viral</span>
+                    <span class="bg-purple-500/30 text-purple-200 text-xs px-2 py-1 rounded-full">#reels</span>
+                    <span class="bg-green-500/30 text-green-200 text-xs px-2 py-1 rounded-full">#explore</span>
+                  </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex items-center justify-between text-xs text-white/70 border-t border-white/20 pt-2">
+                  <span class="flex items-center">
+                    <img [src]="reel.user.avatar" class="w-5 h-5 rounded-full mr-1" alt="user">
+                    {{ reel.user.name }}
+                  </span>
+                  <span class="flex items-center">
+                    👁️ {{ reel.views | number }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- User Info -->
@@ -160,6 +243,45 @@
             d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
           />
         </svg>
+
+        <!-- Comments Section -->
+        <div *ngIf="reel.showCommentBox" class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-90 backdrop-blur-md rounded-t-lg p-4 max-h-80 overflow-y-auto">
+          <!-- Comments Header -->
+          <div class="flex justify-between items-center mb-3">
+            <h4 class="text-white font-semibold">Comments</h4>
+            <button (click)="reel.showCommentBox = false" class="text-white hover:text-red-400 transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Existing Comments -->
+          <div class="space-y-3 mb-4 max-h-48 overflow-y-auto">
+            <div *ngFor="let comment of reel.commentsList" class="flex space-x-2">
+              <img [src]="comment.avatar" class="w-8 h-8 rounded-full" alt="commenter avatar">
+              <div class="bg-gray-800 bg-opacity-50 p-2 rounded-lg flex-1">
+                <div class="flex justify-between items-center">
+                  <span class="font-semibold text-sm text-white">{{ comment.name }}</span>
+                  <span class="text-xs text-gray-300">{{ comment.timeAgo }}</span>
+                </div>
+                <p class="text-sm text-gray-200">{{ comment.text }}</p>
+              </div>
+            </div>
+            <div *ngIf="reel.commentsList?.length === 0" class="text-center text-gray-400 py-4">
+              No comments yet. Be the first to comment!
+            </div>
+          </div>
+
+          <!-- Comment Input -->
+          <form (ngSubmit)="addComment(reel)" class="flex space-x-2">
+            <input [(ngModel)]="reel.newComment" name="comment" placeholder="Add a comment..."
+              class="flex-1 px-3 py-2 rounded-lg bg-gray-800 bg-opacity-50 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+              Post
+            </button>
+          </form>
+        </div>
       </div>
     </div>
 
@@ -200,5 +322,3 @@
     </div>
   </div>
 </div>
-
-<!-- Heart Pop Animation Keyframe -->
