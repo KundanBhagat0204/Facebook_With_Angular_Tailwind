@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Post } from '../model/post.model';
 import { PostsService } from '../service/posts.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { formatDistanceToNow } from 'date-fns';
 
 const avatars = [
@@ -18,8 +18,9 @@ const avatars = [
 export class HomeComponent {
   posts: any[] = [];
   showModal = false;
-  postForm!: FormGroup;
   previewUrl: string | null = null;
+  postContent: string = '';
+  selectedFile: File | null = null;
   // Mood selector
   mood: string = 'happy';
   moodList = [
@@ -37,7 +38,7 @@ export class HomeComponent {
     { emoji: '😭' },
   ];
 
-  constructor(private pservice: PostsService, private fb: FormBuilder) { }
+  constructor(private pservice: PostsService) { }
 
   ngOnInit(): void {
     const storedPosts = localStorage.getItem('posts');
@@ -57,10 +58,6 @@ export class HomeComponent {
         this.savePosts();
       });
     }
-    this.postForm = this.fb.group({
-      content: ['', Validators.required],
-      file: [null],
-    });
   }
 
   openModal() {
@@ -68,8 +65,9 @@ export class HomeComponent {
   }
   closeModal() {
     this.showModal = false;
-    this.postForm.reset();
+    this.postContent = '';
     this.previewUrl = null;
+    this.selectedFile = null;
     this.mood = 'happy';
   }
   onFileChange(event: any) {
@@ -79,24 +77,24 @@ export class HomeComponent {
         alert('Please upload an image file!');
         return;
       }
-      this.postForm.patchValue({ file });
+      this.selectedFile = file;
       this.previewUrl = URL.createObjectURL(file);
     }
   }
   removeImage() {
     this.previewUrl = null;
-    this.postForm.patchValue({ file: null });
+    this.selectedFile = null;
   }
 
   createPost() {
-    if (this.postForm.invalid) return;
-    const { content, file } = this.postForm.value;
+    if (!this.postContent.trim()) return;
+    
     const now = new Date();
     const newPost = {
       id: Date.now(),
       timeAgo: 'Just now',
       user: { name: 'You', avatar: 'https://i.pravatar.cc/40' },
-      content,
+      content: this.postContent,
       imageUrl: this.previewUrl || null,
       likes: 0,
       comments: [],
